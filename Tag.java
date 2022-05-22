@@ -1,9 +1,3 @@
-
-
-/**
- *
- * @author vitor
- */
 public class Tag {
     public final static int
             
@@ -30,6 +24,7 @@ public class Tag {
             REPEAT = 275,
             DO = 276,
             NOT = 277,
+            LITERAL = 278,
             
             //Operadores e pontuação
             OR = 286,
@@ -42,6 +37,6 @@ public class Tag {
             GR = 293,
             
             //Outros tokens
-            NUM = 278,
-            ID = 279;
+            NUM = 279,
+            ID = 280;
 }

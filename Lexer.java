@@ -1,10 +1,6 @@
 import java.io.*;
 import java.util.Hashtable;
 
-/**
- *
- * @author vitor
- */
 public class Lexer {
     public static int line = 1;
     private char ch = ' ';
@@ -61,7 +57,8 @@ public class Lexer {
         return words;
     }
     
-    public Token scan() throws IOException{
+    public Token scan() throws IOException, LexicError{        
+        
         for(;; readch()){
             if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') continue;
             else if (ch == '\n') line++;
@@ -81,6 +78,24 @@ public class Lexer {
                 if (readch('=')) return new Word(":=", Tag.EQ);
                 else return new Token(':');
         }
+        
+        if(ch =='"'){
+            StringBuffer sb = new StringBuffer();
+            do{
+                sb.append(ch);
+                readch();                
+                //Tratar EOF
+                if(ch=='\uffff'){
+                    throw new LexicError("String não fechada", line);
+                }
+            }while(ch!='"');  
+            sb.append(ch);
+            readch();
+            String s = sb.toString();
+            Word w = new Word (s, Tag.LITERAL);
+            return w;            
+        }       
+        
         
         if (Character.isDigit(ch)){
             int value = 0;

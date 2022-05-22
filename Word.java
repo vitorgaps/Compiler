@@ -1,10 +1,3 @@
-
-
-/**
- *
- * @author vitor
- */
-
 public class Word extends Token{
     private String lexeme = "";
     

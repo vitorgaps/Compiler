@@ -1,9 +1,3 @@
-
-
-/**
- *
- * @author vitor
- */
 public class Token {
     public final int tag;
     
