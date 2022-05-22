@@ -1,5 +1,3 @@
-package Compiler;
-
 import java.io.*;
 import java.util.Hashtable;
 
@@ -10,8 +8,7 @@ import java.util.Hashtable;
 public class Lexer {
     public static int line = 1;
     private char ch = ' ';
-    private FileReader file;
-    
+    private FileReader file;    
     private Hashtable words = new Hashtable<>();
     
     private void reserve(Word w){
@@ -60,6 +57,10 @@ public class Lexer {
         return true;
     }
     
+    public Hashtable getTable(){
+        return words;
+    }
+    
     public Token scan() throws IOException{
         for(;; readch()){
             if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') continue;
@@ -76,6 +77,9 @@ public class Lexer {
             case '>':
                 if (readch('=')) return new Word(">=", Tag.GE);
                 else return new Token('>');                        
+            case ':':
+                if (readch('=')) return new Word(":=", Tag.EQ);
+                else return new Token(':');
         }
         
         if (Character.isDigit(ch)){

@@ -1,4 +1,4 @@
-package Compiler;
+
 
 /**
  *
@@ -26,7 +26,7 @@ public class Word extends Token{
     }
     
     public String getLexeme(){
-        return lexeme;
+        return "" + lexeme;
     }
     
     

@@ -1,4 +1,4 @@
-package Compiler;
+
 
 /**
  *
@@ -12,6 +12,7 @@ public class Num extends Token{
         this.value = value;
     }
     
+    @Override
     public String toString(){
         return "" + value;
     }    

@@ -1,4 +1,4 @@
-package Compiler;
+
 
 /**
  *
@@ -11,7 +11,8 @@ public class Token {
         tag = t;
     }
     
+    @Override
     public String toString(){
-        return "" + tag;
+        return "" + (char)tag;
     }
 }
