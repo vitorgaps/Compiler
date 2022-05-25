@@ -4,7 +4,7 @@ public class Num extends Token{
     public final int value;
     
     public Num(int value){
-        super(Tag.NUM);
+        super(Tag.NUM.getValor());
         this.value = value;
     }
     

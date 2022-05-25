@@ -1,5 +1,6 @@
 import domain.exceptions.LexicError;
 import domain.lexer.Lexer;
+import domain.models.Tag;
 import domain.models.Token;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class Main {
         Token token = null;
         do {
                 token = analisador.scan();
-                System.out.printf("domain.models.Tag: %5d, domain.models.Token: %s\n", token.tag, token.toString());
+                System.out.printf("domain.models.Tag: %5s, domain.models.Token: %s\n", Tag.valueOf(token.tag), token.toString());
         }while((char)token.tag!='\uffff');
         var table = analisador.getTable();
         System.out.println("Fim da execução");

@@ -29,25 +29,25 @@ public class Lexer {
         }
         
         //Inserção das palavras reservadas na hashTable
-        reserve(new Word("routine", Tag.ROUTINE));
-        reserve(new Word("begin", Tag.BEG));
-        reserve(new Word("end", Tag.END));
-        reserve(new Word("declare", Tag.DECLARE));
-        reserve(new Word("int", Tag.INT));
-        reserve(new Word("float", Tag.FLOAT));
-        reserve(new Word("char", Tag.CHAR));
-        reserve(new Word("if", Tag.IF));
-        reserve(new Word("then", Tag.THEN));
-        reserve(new Word("else", Tag.ELSE));
-        reserve(new Word("repeat", Tag.REPEAT));
-        reserve(new Word("until", Tag.UNTIL));
-        reserve(new Word("while", Tag.WHILE));
-        reserve(new Word("do", Tag.DO));
-        reserve(new Word("read", Tag.READ));
-        reserve(new Word("write", Tag.WRITE));
-        reserve(new Word("not", Tag.NOT));
-        reserve(new Word("or", Tag.OR));
-        reserve(new Word("and", Tag.AND));
+        reserve(new Word("routine", Tag.ROUTINE.getValor()));
+        reserve(new Word("begin", Tag.BEG.getValor()));
+        reserve(new Word("end", Tag.END.getValor()));
+        reserve(new Word("declare", Tag.DECLARE.getValor()));
+        reserve(new Word("int", Tag.INT.getValor()));
+        reserve(new Word("float", Tag.FLOAT.getValor()));
+        reserve(new Word("char", Tag.CHAR.getValor()));
+        reserve(new Word("if", Tag.IF.getValor()));
+        reserve(new Word("then", Tag.THEN.getValor()));
+        reserve(new Word("else", Tag.ELSE.getValor()));
+        reserve(new Word("repeat", Tag.REPEAT.getValor()));
+        reserve(new Word("until", Tag.UNTIL.getValor()));
+        reserve(new Word("while", Tag.WHILE.getValor()));
+        reserve(new Word("do", Tag.DO.getValor()));
+        reserve(new Word("read", Tag.READ.getValor()));
+        reserve(new Word("write", Tag.WRITE.getValor()));
+        reserve(new Word("not", Tag.NOT.getValor()));
+        reserve(new Word("or", Tag.OR.getValor()));
+        reserve(new Word("and", Tag.AND.getValor()));
     }
     
     private void readch() throws IOException{
@@ -76,14 +76,14 @@ public class Lexer {
         switch(ch){
             //operators
             case '<':
-                if (readch('=')) return new Word("<=", Tag.LE);
-                if (ch == '>') return new Word("<>", Tag.NE);
+                if (readch('=')) return new Word("<=", Tag.LE.getValor());
+                if (ch == '>') return new Word("<>", Tag.NE.getValor());
                 else return new Token('<');            
             case '>':
-                if (readch('=')) return new Word(">=", Tag.GE);
+                if (readch('=')) return new Word(">=", Tag.GE.getValor());
                 else return new Token('>');                        
             case ':':
-                if (readch('=')) return new Word(":=", Tag.EQ);
+                if (readch('=')) return new Word(":=", Tag.EQ.getValor());
                 else return new Token(':');
         }
         
@@ -100,7 +100,7 @@ public class Lexer {
             sb.append(ch);
             readch();
             String s = sb.toString();
-            Word w = new Word(s, Tag.LITERAL);
+            Word w = new Word(s, Tag.LITERAL.getValor());
             return w;            
         }       
         
@@ -124,7 +124,7 @@ public class Lexer {
             String s = sb.toString();
             Word w = (Word)words.get(s);
             if (w!= null) return w;
-            w = new Word(s, Tag.ID);
+            w = new Word(s, Tag.ID.getValor());
             words.put(s,w);
             return w;
         }
