@@ -1,3 +1,5 @@
+package domain.models;
+
 public class Token {
     public final int tag;
     

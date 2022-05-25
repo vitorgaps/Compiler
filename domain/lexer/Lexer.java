@@ -1,3 +1,11 @@
+package domain.lexer;
+
+import domain.exceptions.LexicError;
+import domain.models.Num;
+import domain.models.Tag;
+import domain.models.Token;
+import domain.models.Word;
+
 import java.io.*;
 import java.util.Hashtable;
 
@@ -21,25 +29,25 @@ public class Lexer {
         }
         
         //Inserção das palavras reservadas na hashTable
-        reserve(new Word ("routine", Tag.ROUTINE));        
-        reserve(new Word ("begin", Tag.BEG));
-        reserve(new Word ("end", Tag.END));
-        reserve(new Word ("declare", Tag.DECLARE));        
-        reserve(new Word ("int", Tag.INT));
-        reserve(new Word ("float", Tag.FLOAT));
-        reserve(new Word ("char", Tag.CHAR));        
+        reserve(new Word("routine", Tag.ROUTINE));
+        reserve(new Word("begin", Tag.BEG));
+        reserve(new Word("end", Tag.END));
+        reserve(new Word("declare", Tag.DECLARE));
+        reserve(new Word("int", Tag.INT));
+        reserve(new Word("float", Tag.FLOAT));
+        reserve(new Word("char", Tag.CHAR));
         reserve(new Word("if", Tag.IF));
         reserve(new Word("then", Tag.THEN));
         reserve(new Word("else", Tag.ELSE));
         reserve(new Word("repeat", Tag.REPEAT));
         reserve(new Word("until", Tag.UNTIL));
-        reserve(new Word ("while", Tag.WHILE));
-        reserve(new Word ("do", Tag.DO));
-        reserve(new Word ("read", Tag.READ));
-        reserve(new Word ("write", Tag.WRITE));
-        reserve(new Word ("not", Tag.NOT));
-        reserve(new Word ("or", Tag.OR));
-        reserve(new Word ("and", Tag.AND)); 
+        reserve(new Word("while", Tag.WHILE));
+        reserve(new Word("do", Tag.DO));
+        reserve(new Word("read", Tag.READ));
+        reserve(new Word("write", Tag.WRITE));
+        reserve(new Word("not", Tag.NOT));
+        reserve(new Word("or", Tag.OR));
+        reserve(new Word("and", Tag.AND));
     }
     
     private void readch() throws IOException{
@@ -57,7 +65,7 @@ public class Lexer {
         return words;
     }
     
-    public Token scan() throws IOException, LexicError{        
+    public Token scan() throws IOException, LexicError {
         
         for(;; readch()){
             if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') continue;
@@ -69,7 +77,7 @@ public class Lexer {
             //operators
             case '<':
                 if (readch('=')) return new Word("<=", Tag.LE);
-                if (ch == '>') return new Word ("<>", Tag.NE);
+                if (ch == '>') return new Word("<>", Tag.NE);
                 else return new Token('<');            
             case '>':
                 if (readch('=')) return new Word(">=", Tag.GE);
@@ -92,7 +100,7 @@ public class Lexer {
             sb.append(ch);
             readch();
             String s = sb.toString();
-            Word w = new Word (s, Tag.LITERAL);
+            Word w = new Word(s, Tag.LITERAL);
             return w;            
         }       
         
@@ -116,7 +124,7 @@ public class Lexer {
             String s = sb.toString();
             Word w = (Word)words.get(s);
             if (w!= null) return w;
-            w = new Word (s, Tag.ID);
+            w = new Word(s, Tag.ID);
             words.put(s,w);
             return w;
         }

@@ -1,0 +1,8 @@
+routine
+declare
+    int a, aux;
+begin
+    a := 0;
+    read(aux);
+    write(a + aux);
+end

@@ -1,3 +1,5 @@
+package domain.models;
+
 public class Tag {
     public final static int
             

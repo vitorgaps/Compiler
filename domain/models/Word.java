@@ -1,3 +1,5 @@
+package domain.models;
+
 public class Word extends Token{
     private String lexeme = "";
     
