@@ -85,6 +85,36 @@ public class Lexer {
             case ':':
                 if (readch('=')) return new Word(":=", Tag.EQ.getValor());
                 else return new Token(':');
+            case ';':
+                readch();
+                return new Word(";", Tag.SEMICOLON.getValor());
+            case ',':
+                readch();
+                return new Word(",", Tag.COMMA.getValor());
+            case '(':
+                readch();
+                return new Word(",", Tag.LEFT_BRACKET.getValor());
+            case ')':
+                readch();
+                return new Word(",", Tag.RIGHT_BRACKET.getValor());
+            case '+':
+                readch();
+                return new Word(",", Tag.ADD.getValor());
+            case '-':
+                readch();
+                return new Word(",", Tag.SUB.getValor());
+            case '*':
+                readch();
+                return new Word(",", Tag.MUL.getValor());
+            case '/':
+                readch();
+                return new Word(",", Tag.DIV.getValor());
+            case '{':
+                readch();
+                return new Word(",", Tag.LEFT_BRACE.getValor());
+            case '}':
+                readch();
+                return new Word(",", Tag.RIGHT_BRACE.getValor());
         }
         
         if(ch =='"'){
