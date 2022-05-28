@@ -33,6 +33,7 @@ public enum Tag {
     //Outros tokens
     NUM(323),
     ID(324),
+    INTEGER(325),
 
     //Operadores e pontuação
     OR(286),
@@ -61,7 +62,8 @@ public enum Tag {
     RIGHT_BRACKET(284), // )
     LEFT_BRACE(284), // {
     RIGHT_BRACE(286), // }
-    UNDERLINE(350);
+    UNDERLINE(350), // _
+    COLON(351); // :
 
 
     private int value;

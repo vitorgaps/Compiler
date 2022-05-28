@@ -1,16 +1,14 @@
 package domain.lexer;
 
 import domain.exceptions.LexicError;
-import domain.models.Num;
-import domain.models.Tag;
-import domain.models.Token;
-import domain.models.Word;
+import domain.models.*;
+import domain.models.Integer;
 
 import java.io.*;
 import java.util.Hashtable;
 
 public class Lexer {
-    public static int line = 1;
+    private int line = 1;
     private char ch = ' ';
     private FileReader file;    
     private Hashtable words = new Hashtable<>();
@@ -74,14 +72,16 @@ public class Lexer {
                         readch();
                         break;
                     }
-                    if(ch=='\n')
+                    if(ch=='\n'){
                         line++;
+                    }
 
                     if(ch=='\uffff'){
                         throw new LexicError("Comentário não fechado", line);
                     }
                 }while(ch!='%');
             }
+
             if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') continue;
             else if (ch == '\n') line++;
             else break;
@@ -92,13 +92,13 @@ public class Lexer {
             case '<':
                 if (readch('=')) return new Word("<=", Tag.LE.getValor());
                 if (ch == '>') return new Word("<>", Tag.NE.getValor());
-                else return new Token('<');            
+                else return new Word("<", Tag.LS.getValor());
             case '>':
                 if (readch('=')) return new Word(">=", Tag.GE.getValor());
-                else return new Token('>');                        
+                else return new Word(">", Tag.GR.getValor());
             case ':':
                 if (readch('=')) return new Word(":=", Tag.EQ.getValor());
-                else return new Token(':');
+                else return new Word(":", Tag.COLON.getValor());
             case ';':
                 readch();
                 return new Word(";", Tag.SEMICOLON.getValor());
@@ -171,7 +171,7 @@ public class Lexer {
                     return new Num(value);
                 }
             } while(Character.isDigit(ch));
-            return new Num(value);
+            return new Integer((int)value);
         }
         
         if (Character.isLetter(ch)){

@@ -13,7 +13,9 @@ public class Main {
         Token token = null;
         do {
                 token = analisador.scan();
-                System.out.printf("Tag: %10s -> Token: %s\n", Tag.valueOf(token.tag), token.toString());
+                if((char)token.tag!='\uffff') {
+                    System.out.printf("Tag: %10s -> Token: %s\n", Tag.valueOf(token.tag), token.toString());
+                }
         }while((char)token.tag!='\uffff');
         var table = analisador.getTable();
         System.out.println("Fim da execução");
