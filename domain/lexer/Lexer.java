@@ -66,13 +66,27 @@ public class Lexer {
     }
     
     public Token scan() throws IOException, LexicError {
-        
+
         for(;; readch()){
+            if(ch == '%'){
+                do{
+                    if(readch('%')){
+                        readch();
+                        break;
+                    }
+                    if(ch=='\n')
+                        line++;
+
+                    if(ch=='\uffff'){
+                        throw new LexicError("Comentário não fechado", line);
+                    }
+                }while(ch!='%');
+            }
             if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') continue;
             else if (ch == '\n') line++;
             else break;
         }
-        
+
         switch(ch){
             //operators
             case '<':
