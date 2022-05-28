@@ -107,28 +107,28 @@ public class Lexer {
                 return new Word(",", Tag.COMMA.getValor());
             case '(':
                 readch();
-                return new Word(",", Tag.LEFT_BRACKET.getValor());
+                return new Word("(", Tag.LEFT_BRACKET.getValor());
             case ')':
                 readch();
-                return new Word(",", Tag.RIGHT_BRACKET.getValor());
+                return new Word(")", Tag.RIGHT_BRACKET.getValor());
             case '+':
                 readch();
-                return new Word(",", Tag.ADD.getValor());
+                return new Word("+", Tag.ADD.getValor());
             case '-':
                 readch();
-                return new Word(",", Tag.SUB.getValor());
+                return new Word("-", Tag.SUB.getValor());
             case '*':
                 readch();
-                return new Word(",", Tag.MUL.getValor());
+                return new Word("*", Tag.MUL.getValor());
             case '/':
                 readch();
-                return new Word(",", Tag.DIV.getValor());
+                return new Word("/", Tag.DIV.getValor());
             case '{':
                 readch();
-                return new Word(",", Tag.LEFT_BRACE.getValor());
+                return new Word("{", Tag.LEFT_BRACE.getValor());
             case '}':
                 readch();
-                return new Word(",", Tag.RIGHT_BRACE.getValor());
+                return new Word("}", Tag.RIGHT_BRACE.getValor());
         }
         
         if(ch =='"'){
@@ -148,12 +148,28 @@ public class Lexer {
             return w;            
         }       
         
-        
         if (Character.isDigit(ch)){
-            int value = 0;
+            double value = 0;
             do{
-                value = 10*value + Character.digit(ch,10);
+                value = 10 * value + Character.digit(ch,10);
                 readch();
+                if(ch=='.') {
+                    StringBuffer sb = new StringBuffer();
+                    readch();
+
+                    if(Character.isDigit(ch))
+                        sb.append(".");
+                    else
+                        throw new LexicError("Float mal formatado",line);
+
+                    do{
+                        sb.append(ch);
+                        readch();
+                    }while(Character.isDigit(ch));
+                    double decimal = Double.parseDouble(sb.toString());
+                    value = value + decimal;
+                    return new Num(value);
+                }
             } while(Character.isDigit(ch));
             return new Num(value);
         }

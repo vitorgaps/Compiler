@@ -1,9 +1,9 @@
 package domain.models;
 
 public class Num extends Token{
-    public final int value;
+    public final double value;
     
-    public Num(int value){
+    public Num(double value){
         super(Tag.NUM.getValor());
         this.value = value;
     }
