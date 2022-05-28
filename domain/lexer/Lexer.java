@@ -97,8 +97,11 @@ public class Lexer {
                 if (readch('=')) return new Word(">=", Tag.GE.getValor());
                 else return new Word(">", Tag.GR.getValor());
             case ':':
-                if (readch('=')) return new Word(":=", Tag.EQ.getValor());
+                if (readch('=')) return new Word(":=", Tag.ASSIGN.getValor());
                 else return new Word(":", Tag.COLON.getValor());
+            case '=':
+                readch();
+                return new Word("=", Tag.EQ.getValor());
             case ';':
                 readch();
                 return new Word(";", Tag.SEMICOLON.getValor());
@@ -111,6 +114,9 @@ public class Lexer {
             case ')':
                 readch();
                 return new Word(")", Tag.RIGHT_BRACKET.getValor());
+            case '_':
+                readch();
+                return new Word("_", Tag.UNDERLINE.getValor());
             case '+':
                 readch();
                 return new Word("+", Tag.ADD.getValor());

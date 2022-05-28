@@ -44,6 +44,7 @@ public enum Tag {
     NE(291),
     LS(292),
     GR(293),
+    ASSIGN(294),
 
     // Arithmetic Operators
     ADD(281), // +
@@ -54,7 +55,6 @@ public enum Tag {
     //Symbols
 
     SEMICOLON(278), // ;
-    ASSIGN(279), //  =
     COMMA(280), //  ,
     DOUBLE_QUOTES(281), // ""
     DOT(282), //  .
