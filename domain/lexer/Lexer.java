@@ -12,6 +12,10 @@ public class Lexer {
     private char ch = ' ';
     private FileReader file;    
     private Hashtable words = new Hashtable<>();
+
+    public Hashtable getTabelaSimbolos() {
+        return words;
+    }
     
     private void reserve(Word w){
         words.put(w.getLexeme(), w);

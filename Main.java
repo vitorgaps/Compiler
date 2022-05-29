@@ -19,5 +19,8 @@ public class Main {
         }while((char)token.tag!='\uffff');
         var table = analisador.getTable();
         System.out.println("Fim da execução");
+        System.out.println("--------------------------------------------");
+        System.out.println("Tabela Simbolos:");
+        analisador.getTabelaSimbolos().forEach((i, v) -> System.out.print(v +", "));
     }
 }
