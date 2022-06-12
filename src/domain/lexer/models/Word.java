@@ -1,4 +1,4 @@
-package domain.models;
+package src.domain.lexer.models;
 
 public class Word extends Token {
     private String lexeme = "";

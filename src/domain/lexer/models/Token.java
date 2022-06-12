@@ -1,4 +1,4 @@
-package domain.models;
+package src.domain.lexer.models;
 
 public class Token {
     public final int tag;

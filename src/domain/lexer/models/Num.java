@@ -1,4 +1,4 @@
-package domain.models;
+package src.domain.lexer.models;
 
 public class Num extends Token{
     public final double value;

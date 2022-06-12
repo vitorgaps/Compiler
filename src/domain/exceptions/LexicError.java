@@ -1,4 +1,4 @@
-package domain.exceptions;
+package src.domain.exceptions;
 
 public class LexicError extends Exception {
             

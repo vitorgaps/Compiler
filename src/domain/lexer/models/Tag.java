@@ -1,4 +1,4 @@
-package domain.models;
+package src.domain.lexer.models;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +34,7 @@ public enum Tag {
     NUM(323),
     ID(324),
     INTEGER(325),
+    CARACTERE(326),
 
     //Operadores e pontuação
     OR(286),
@@ -60,7 +61,7 @@ public enum Tag {
     DOT(282), //  .
     LEFT_BRACKET(283), // (
     RIGHT_BRACKET(284), // )
-    LEFT_BRACE(284), // {
+    LEFT_BRACE(285), // {
     RIGHT_BRACE(286), // }
     UNDERLINE(350), // _
     COLON(351); // :

@@ -1,4 +1,4 @@
-package domain.models;
+package src.domain.lexer.models;
 
 public class Integer extends Token{
     public final int value;

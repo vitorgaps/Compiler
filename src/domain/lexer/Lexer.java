@@ -1,14 +1,14 @@
-package domain.lexer;
+package src.domain.lexer;
 
-import domain.exceptions.LexicError;
-import domain.models.*;
-import domain.models.Integer;
+import src.domain.exceptions.LexicError;
+import src.domain.lexer.models.*;
+import src.domain.lexer.models.Integer;
 
 import java.io.*;
 import java.util.Hashtable;
 
 public class Lexer {
-    private int line = 1;
+    public int line = 1;
     private char ch = ' ';
     private FileReader file;    
     private Hashtable words = new Hashtable<>();
@@ -95,7 +95,10 @@ public class Lexer {
             //operators
             case '<':
                 if (readch('=')) return new Word("<=", Tag.LE.getValor());
-                if (ch == '>') return new Word("<>", Tag.NE.getValor());
+                if (ch == '>') {
+                    readch();
+                    return new Word("<>", Tag.NE.getValor());
+                }
                 else return new Word("<", Tag.LS.getValor());
             case '>':
                 if (readch('=')) return new Word(">=", Tag.GE.getValor());
@@ -139,6 +142,17 @@ public class Lexer {
             case '}':
                 readch();
                 return new Word("}", Tag.RIGHT_BRACE.getValor());
+
+        }
+
+        if (ch == '\'') {
+            readch();
+            char caracter = ch;
+            if (readch('\'')) {
+                return new Word(String.valueOf(caracter), Tag.CARACTERE.getValor());
+            } else {
+                throw new LexicError("caractere nao fechado", line);
+            }
         }
         
         if(ch =='"'){
