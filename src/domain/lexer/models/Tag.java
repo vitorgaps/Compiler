@@ -36,35 +36,37 @@ public enum Tag {
     INTEGER(325),
     CARACTERE(326),
 
-    //Operadores e pontuação
-    OR(286),
-    AND(287),
-    EQ(288),
-    GE(289),
-    LE(290),
-    NE(291),
-    LS(292),
-    GR(293),
-    ASSIGN(294),
 
     // Arithmetic Operators
-    ADD(281), // +
+    ADD(265), // +
     SUB(266), // -
     MUL(267), // *
     DIV(268), // /
 
     //Symbols
+    SEMICOLON(269), // ;
+    COMMA(270), //  ,
+    DOUBLE_QUOTES(271), // ""
+    DOT(272), //  .
+    LEFT_BRACKET(273), // (
+    RIGHT_BRACKET(274), // )
+    LEFT_BRACE(275), // {
+    RIGHT_BRACE(276), // }
 
-    SEMICOLON(278), // ;
-    COMMA(280), //  ,
-    DOUBLE_QUOTES(281), // ""
-    DOT(282), //  .
-    LEFT_BRACKET(283), // (
-    RIGHT_BRACKET(284), // )
-    LEFT_BRACE(285), // {
-    RIGHT_BRACE(286), // }
-    UNDERLINE(350), // _
-    COLON(351); // :
+    //Operadores e pontuação
+    OR(277),
+    AND(278),
+    EQ(279),
+    GE(280),
+    LE(281),
+    NE(282),
+    LS(283),
+    GR(284),
+    ASSIGN(285),
+
+    UNDERLINE(286), // _
+    COLON(287), // :
+    ERROR(288);
 
 
     private int value;

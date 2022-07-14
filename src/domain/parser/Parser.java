@@ -1,15 +1,19 @@
 package src.domain.parser;
 
 import src.domain.lexer.Lexer;
+import src.domain.lexer.models.Identifier;
 import src.domain.lexer.models.Tag;
 import src.domain.lexer.models.Token;
+import src.domain.semantic.Semantic;
 
 public class Parser {
     private final Lexer lexer;  // lexical analyzer for this parser
+    private final Semantic semantic;
     private Token look;
 
-    public Parser(Lexer lexer) throws Exception {
+    public Parser(Lexer lexer, Semantic semantic) throws Exception {
         this.lexer = lexer;
+        this.semantic = semantic;
         move();
     }
 
@@ -57,27 +61,41 @@ public class Parser {
     }
 
     private void decl() throws Exception {
-        type();
-        identList();
+        Tag type = type();
+        identList(type);
         match(Tag.SEMICOLON.getValor());
         if (look.tag == Tag.INT.getValor() || look.tag == Tag.CHAR.getValor() || look.tag == Tag.FLOAT.getValor()) {
             decl();
         }
     }
 
-    private void type() throws Exception {
+    private Tag type() throws Exception {
         if (look.tag == Tag.INT.getValor() || look.tag == Tag.CHAR.getValor() || look.tag == Tag.FLOAT.getValor()) {
+            Tag type = Tag.valueOf(look.tag);
             move();
+            return type;
         } else {
-            error("Tipo não informado");
+            error("Incorrect type");
         }
+        return Tag.TYPE;
     }
 
-    private void identList() throws Exception {
+    private void identList(Tag type) throws Exception {
+        if(look.tag == Tag.ID.getValor()){
+            if(semantic.verifyUnicy(lexer.getTabelaSimbolos(),((Identifier)look).getLexeme())){
+                if(((Identifier)look).getType()!=Tag.TYPE){
+                    error("Identifier has already been declared");
+                }
+                else{
+                    ((Identifier)look).assignType(type);
+                }
+            }
+        }
         match(Tag.ID.getValor());
+
         if (look.tag == Tag.COMMA.getValor()) {
             move();
-            identList();
+            identList(type);
         }
     }
 
@@ -91,7 +109,7 @@ public class Parser {
 
     private void stmt() throws Exception {
         if (look.tag == Tag.ID.getValor()) {
-            assingStmt();
+            assignStmt(((Identifier)look).getType());
         } else if (look.tag == Tag.IF.getValor()) {
             ifStmt();
         } else if (look.tag == Tag.WHILE.getValor()) {
@@ -105,7 +123,7 @@ public class Parser {
         }
     }
 
-    private void stmtSufix() throws Exception {
+    private void stmtSuffix() throws Exception {
         match(Tag.UNTIL.getValor());
         expression();
     }
@@ -113,7 +131,7 @@ public class Parser {
     private void repeatSmt() throws Exception {
         match(Tag.REPEAT.getValor());
         stmtList();
-        stmtSufix();
+        stmtSuffix();
     }
 
     private void ifStmt() throws Exception {
@@ -132,10 +150,17 @@ public class Parser {
         }
     }
 
-    private void assingStmt() throws Exception {
+    private void assignStmt(Tag type) throws Exception {
+        if(lexer.getTabelaSimbolos().containsKey(((Identifier)look).getLexeme())){
+            if(((Identifier)look).getType().equals(Tag.TYPE))
+                error("Identifier does not exists");
+        }
         match(Tag.ID.getValor());
         match(Tag.ASSIGN.getValor());
-        simpleExpr();
+        Tag expressionType = simpleExpr();
+        if(!semantic.compareTypes(type, expressionType)){
+            error("Incompatible types assign");
+        }
     }
 
     private void whileStmt() throws Exception {
@@ -153,6 +178,12 @@ public class Parser {
     private void readStmt() throws Exception {
         match(Tag.READ.getValor());
         match(Tag.LEFT_BRACKET.getValor());
+        if(lexer.getTabelaSimbolos().containsKey(((Identifier)look).getLexeme())){
+            Identifier symbol = (Identifier) lexer.getTabelaSimbolos().get(((Identifier) look).getLexeme());
+            if(symbol.getType().equals(Tag.TYPE)){
+                error("Identifier does not exists");
+            }
+        }
         match(Tag.ID.getValor());
         match(Tag.RIGHT_BRACKET.getValor());
     }
@@ -172,60 +203,121 @@ public class Parser {
         }
     }
 
-    private void expression() throws Exception {
-        simpleExpr();
+    private Tag expression() throws Exception {
+        Tag firstExpressionType = simpleExpr();
+        Tag returnType = firstExpressionType;
+
         if (isFirstRelop()) {
-            relop();
-            expression();
+            Tag relopType = relop();
+            Tag secondExpressionType = expression();
+            Tag resultingType = semantic.getResultingType(firstExpressionType,relopType,secondExpressionType);
+            returnType = resultingType;
+            if(!resultingType.equals(Tag.BOOL)){
+                error("Relop operations can't be performed between " + firstExpressionType + " and " + secondExpressionType +" types");
+            }
         }
 
+        return returnType;
     }
 
-    private void simpleExpr() throws Exception {
-        term();
+    private Tag simpleExpr() throws Exception {
+        Tag termType = term();
+        Tag returnType = termType;
+
         if (look.tag == Tag.ADD.getValor() || look.tag == Tag.SUB.getValor() || look.tag == Tag.OR.getValor()) {
-            addOp();
-            simpleExpr();
+           Tag addOpType = addOp();
+
+            Tag expressionType = simpleExpr();
+
+           returnType = semantic.getResultingType(termType,addOpType,expressionType);
+           if(addOpType==Tag.OR){
+               if(returnType.equals(Tag.ERROR)){
+                   error("Cannot do an or between an " + termType + " and a " + expressionType);
+               }
+           } else{
+               if(returnType.equals(Tag.ERROR)){
+                   error("Semantic error");
+               }
+           }
         }
+
+        return returnType;
     }
 
-    private void term() throws Exception {
-        factorA();
+    private Tag term() throws Exception {
+        Tag factorAType = factorA();
+        Tag returnType = factorAType;
+
         if (look.tag == Tag.MUL.getValor() || look.tag == Tag.DIV.getValor() || look.tag == Tag.AND.getValor()) {
-            mulOp();
-            term();
+            Tag mulOpType = mulOp();
+            Tag termType = term();
+            returnType = semantic.getResultingType(factorAType,mulOpType,termType);
+            if(mulOpType==Tag.AND){
+                if(returnType.equals(Tag.ERROR)){
+                    error("Cannot do an and between an " + termType + " and a " + factorAType);
+                }
+            } else{
+                if(returnType.equals(Tag.ERROR)){
+                    error("Semantic error");
+                }
+            }
         }
+        return returnType;
     }
 
-    private void factorA() throws Exception {
+    private Tag factorA() throws Exception {
+        Tag returnType = Tag.ERROR;
+
         if (look.tag == Tag.NOT.getValor()) {
             move();
-            factor();
+            Tag factorType = factor();
+            returnType = factorType;
+            if(!factorType.equals(Tag.BOOL)){
+                error("Not cannot be performed with a " + factorType +" type");
+            }
         } else if (look.tag == Tag.SUB.getValor()) {
             move();
-            factor();
+            Tag factorType = factor();
+            returnType = factorType;
+            if(!factorType.equals(Tag.INTEGER) && !factorType.equals(Tag.NUM)){
+                error("- cannot be applied to " +factorType+ "type");
+            }
         } else if (isFirstFactor()) {
-            factor();
+            returnType = factor();
         } else {
-            error("factorAExcption");
+            error("factorAException");
         }
+
+        return returnType;
     }
 
-    private void factor() throws Exception {
+    private Tag factor() throws Exception {
+        Tag returnType = Tag.ERROR;
         if (look.tag == Tag.ID.getValor()) {
+            if(lexer.getTabelaSimbolos().containsKey(((Identifier)look).getLexeme())){
+                Identifier symbol = (Identifier) lexer.getTabelaSimbolos().get(((Identifier) look).getLexeme());
+                if(symbol.getType().equals(Tag.TYPE)){
+                    error("Identifier does not exists");
+                }
+            }
+
+            returnType = ((Identifier)look).getType();
             move();
         } else if (look.tag == Tag.LEFT_BRACKET.getValor()) {
             move();
-            expression();
+            returnType = expression();
             match(Tag.RIGHT_BRACKET.getValor());
         } else if (isFirstConstant()) {
-            constant();
+            returnType = constant();
         } else {
             error("factorException");
         }
+
+        return returnType;
     }
 
-    private void relop() throws Exception {
+    private Tag relop() throws Exception {
+        Tag returnType = Tag.valueOf(look.tag);
         if (look.tag == Tag.EQ.getValor()) {
             move();
         } else if (look.tag == Tag.GR.getValor()) {
@@ -241,9 +333,11 @@ public class Parser {
         } else {
             error("relopException");
         }
+        return returnType;
     }
 
-    private void mulOp() throws Exception {
+    private Tag mulOp() throws Exception {
+        Tag returnType = Tag.valueOf(look.tag);
         if (look.tag == Tag.MUL.getValor()) {
             move();
         } else if (look.tag == Tag.DIV.getValor()) {
@@ -253,9 +347,11 @@ public class Parser {
         } else {
             error("mulopException");
         }
+        return returnType;
     }
 
-    private void addOp() throws Exception {
+    private Tag addOp() throws Exception {
+        Tag returnTag = Tag.valueOf(look.tag);
         if (look.tag == Tag.ADD.getValor()) {
             move();
         } else if (look.tag == Tag.SUB.getValor()) {
@@ -265,9 +361,11 @@ public class Parser {
         } else {
             error("addOpException");
         }
+        return returnTag;
     }
 
-    private void constant() throws Exception {
+    private Tag constant() throws Exception {
+        Tag returnType = Tag.valueOf(look.tag);
         if (look.tag == Tag.INTEGER.getValor()) {
             move();
         } else if (look.tag == Tag.NUM.getValor()) {
@@ -278,9 +376,8 @@ public class Parser {
             error("constantError");
         }
 
+        return  returnType;
     }
-
-    // GetFirt functions
 
     private boolean isFirstConstant() {
         return look.tag == Tag.INTEGER.getValor()

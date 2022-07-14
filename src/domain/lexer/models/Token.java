@@ -3,8 +3,8 @@ package src.domain.lexer.models;
 public class Token {
     public final int tag;
     
-    public Token (int t){
-        tag = t;
+    public Token (int tag){
+        this.tag = tag;
     }
     
     @Override

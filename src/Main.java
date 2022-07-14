@@ -2,6 +2,7 @@ package src;
 
 import src.domain.lexer.Lexer;
 import src.domain.parser.Parser;
+import src.domain.semantic.Semantic;
 
 public class Main {
 
@@ -13,8 +14,9 @@ public class Main {
         }
 
         Lexer analisador = new Lexer(args[0]);
+        Semantic semantic = new Semantic();
 
-        Parser parser = new Parser(analisador);
+        Parser parser = new Parser(analisador,semantic);
         parser.program();
 
     }

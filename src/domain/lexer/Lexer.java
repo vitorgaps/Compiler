@@ -160,7 +160,6 @@ public class Lexer {
             do{
                 sb.append(ch);
                 readch();                
-                //Tratar EOF
                 if(ch=='\uffff'){
                     throw new LexicError("String não fechada", line);
                 }
@@ -206,11 +205,11 @@ public class Lexer {
             }while(Character.isLetterOrDigit(ch));
             
             String s = sb.toString();
-            Word w = (Word)words.get(s);
-            if (w!= null) return w;
-            w = new Word(s, Tag.ID.getValor());
-            words.put(s,w);
-            return w;
+            Token id = (Token)words.get(s);
+            if (id!= null) return id;
+            id = new Identifier(s);
+            words.put(s,id);
+            return id;
         }
         
         Token t = new Token(ch);
